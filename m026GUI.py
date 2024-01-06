@@ -1349,7 +1349,7 @@ class ChannelSettings(object):
         
         print("TV tuner frequency: {f} MHz".format(f=self.frequencyMHz))
         # self.tvM026.set_tv_tuner(self.frequencyMHz)
-        self.m026.set_tv_tuner_frequency(self.frequencyMHz)
+        self.m026.set_tv_tuner(self.frequencyMHz)
         
     def channel_update(self,event):
         print("Channel update")
@@ -1405,7 +1405,7 @@ class ChannelSettings(object):
         self.scaleFrequency1.set(0)
         self.updateGUI1(self)
         
-        self.m026.set_tv_tuner_frequency(self.frequencyMHz)
+        self.m026.set_tv_tuner(self.frequencyMHz)
 
     def frequency_prev(self,event):
         iFreq=self.comboboxFrequency.current()
@@ -1417,7 +1417,7 @@ class ChannelSettings(object):
         self.scaleFrequency1.set(0)
         self.updateGUI1(self)
         
-        self.m026.set_tv_tuner_frequency(self.frequencyMHz)
+        self.m026.set_tv_tuner(self.frequencyMHz)
     
     def frequency_next(self,event):
         iFreq=self.comboboxFrequency.current()
@@ -1429,14 +1429,14 @@ class ChannelSettings(object):
         self.scaleFrequency1.set(0)
         self.updateGUI1(self) 
         
-        self.m026.set_tv_tuner_frequency(self.frequencyMHz)
+        self.m026.set_tv_tuner(self.frequencyMHz)
     
     def frequency_default(self,event):
         self.frequencyMHz=self.frequencyDict[self.frequencyName]
         self.scaleFrequency1.set(0)
         self.updateGUI1(self) 
         
-        self.m026.set_tv_tuner_frequency(self.frequencyMHz)
+        self.m026.set_tv_tuner(self.frequencyMHz)
     
     def frequency_changed1(self,event):
         print("Frequency changed")
@@ -1444,7 +1444,7 @@ class ChannelSettings(object):
         self.updateGUI1(self)
         print("TV tuner frequency: {f} MHz".format(f=self.frequencyMHz))
 
-        self.m026.set_tv_tuner_frequency(self.frequencyMHz)
+        self.m026.set_tv_tuner(self.frequencyMHz)
    
     def cancel (self, event):    
         self.setGUI0()

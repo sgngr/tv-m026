@@ -353,7 +353,7 @@ class TvM026(ttk.Frame):
     def set_tv_channel (self,tvChannel):
         vlcApp.videoPlayer.pause()
         m026.vdi_stop_capture()
-        m026.set_tv_tuner_frequency(tvChannel.frequencyMHz)
+        m026.set_tv_tuner(tvChannel.frequencyMHz)
         m026.vdi_start_capture()
         vlcApp.videoPlayer.play()
         self.update_display()
