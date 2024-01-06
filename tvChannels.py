@@ -169,7 +169,9 @@ class TvChannels():
             ET.SubElement(Channel,"name").text=self.channels[i].name
         tree = ET.ElementTree(root)
         tree.write(self.fileChannelList,encoding="utf-8", xml_declaration=True)
-        if platform.system() == 'Linux':
+
+        from shutil import which
+        if which('xml') :
             cmd="xml format {file} > {file}.1".format(file=self.fileChannelList)
             print(cmd)
             os.system(cmd)

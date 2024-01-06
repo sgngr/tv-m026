@@ -106,13 +106,15 @@ class Settings():
         
         tree = ET.ElementTree(root)
         tree.write(file,encoding="utf-8", xml_declaration=True)
-        if platform.system() == 'Linux':
+        from shutil import which
+        if which('xml') :
             cmd="xml format {file} > {file}.1".format(file=self.fileSettings)
             print(cmd)
             os.system(cmd)
             cmd="mv {file}.1 {file} ".format(file=self.fileSettings)
             print(cmd)
-            os.system(cmd)   
+            os.system(cmd)
+
     def print(self):
         print("Application Settings:")
         print(" v4l2 loopback device:",self.v4l2Device)
