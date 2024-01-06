@@ -33,6 +33,10 @@ The Python class `M026Device` provides a set of functions to control the hardwar
 
 ## Notes
 
+- Compiling the streamer
+    
+    `gcc -lusb-1.0 m026-streamer.c -o m026-streamer`
+    
 - Audio control
 
     Audio control is only possible if the headphone output signal is transmitted to a sound input on the computer.
