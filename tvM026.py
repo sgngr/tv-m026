@@ -40,7 +40,6 @@ else:
 tvM026Settings.print()
 print("----------------------------------------------------------------")
 
-
 m026.audioSource=tvM026Settings.m026AudioSource
 m026.videoSource=tvM026Settings.m026VideoSource
 
@@ -127,7 +126,7 @@ if svideo == True:
 
 if tv == True:
     tvChannel=tvChannels.channels[tvChannels.channel]
-    m026.set_tv_tuner_frequency(tvChannel.frequencyMHz)
+    m026.set_tv_tuner(tvChannel.frequencyMHz)
     m026.set_video_source(VIDEO_SOURCE_TV)
 
 m026.video_decoder_status_video_standard()
