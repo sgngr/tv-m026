@@ -1,7 +1,10 @@
 /*
+* A TV app for the AVerMedia AVerTV USB2.0
 * m026-streamer.c
 * Version:    0.1
 * Author:     Sinan Güngör
+* License:    GPL v2
+* 
 * This code is to transmit the video data to a v4l2loopback device
 * Compiling: gcc -lusb-1.0 m026-streamer.c -o m026-streamer
 */
@@ -115,36 +118,37 @@ int setV4L2format(){
     fprintf(stderr, "* Setting v4l2 stream format\n");
     struct v4l2_format sdf;;
     sdf.type = V4L2_BUF_TYPE_VIDEO_OUTPUT;
-	if (ioctl(dev_fd, VIDIOC_G_FMT, &sdf) == -1) {
-		fprintf(stderr, "*  ~~~ Can not get video device! ~~~\n");
-		return(1);
-	}
-	fprintf(stderr, "*  Current v4l2 stream data format - Width: %d \n",sdf.fmt.pix.width);
+    if (ioctl(dev_fd, VIDIOC_G_FMT, &sdf) == -1) {
+        fprintf(stderr, "*  ~~~ Can not get video device! ~~~\n");
+        return(1);
+    }
+    fprintf(stderr, "*  Current v4l2 stream data format - Width: %d \n",sdf.fmt.pix.width);
     fprintf(stderr, "*  Current v4l2 stream data format - Height: %d \n",sdf.fmt.pix.height);
     fprintf(stderr, "*  Current v4l2 stream data format - Pixel format: %d \n",sdf.fmt.pix.pixelformat);
     
     sdf.type = V4L2_BUF_TYPE_VIDEO_OUTPUT;
-	sdf.fmt.pix.width = width;
-	sdf.fmt.pix.height = height;
-	sdf.fmt.pix.pixelformat = V4L2_PIX_FMT_YUYV;
-	sdf.fmt.pix.sizeimage = video_buffer_size;
-	sdf.fmt.pix.field = V4L2_FIELD_NONE;
-	sdf.fmt.pix.colorspace = V4L2_COLORSPACE_REC709;
+    sdf.fmt.pix.width = width;
+    sdf.fmt.pix.height = height;
+    sdf.fmt.pix.pixelformat = V4L2_PIX_FMT_YUYV;
+    sdf.fmt.pix.sizeimage = video_buffer_size;
+    sdf.fmt.pix.field = V4L2_FIELD_NONE;
+    sdf.fmt.pix.colorspace = V4L2_COLORSPACE_REC709;
     
     fprintf(stderr, "* Set width: %d\n",sdf.fmt.pix.width);
     fprintf(stderr, "* Set height: %d\n",sdf.fmt.pix.height);
     
-	if (ioctl(dev_fd, VIDIOC_S_FMT, &sdf) == -1) {
-		fprintf(stderr, "*  ~~~ Can not set video device! ~~~\n");
-		return(1);
-	}
+    if (ioctl(dev_fd, VIDIOC_S_FMT, &sdf) == -1) {
+        fprintf(stderr, "*  ~~~ Can not set video device! ~~~\n");
+        return(1);
+    }
     
     if (ioctl(dev_fd, VIDIOC_G_FMT, &sdf) == -1) {
-		fprintf(stderr, "*  ~~~ Can not get video device! ~~~\n");
-		return(1);
-	} 
-	fprintf(stderr, "* v4l2 stream format is set\n");
-	fprintf(stderr, "*  v4l2 stream data format - Width: %d \n",sdf.fmt.pix.width);
+        fprintf(stderr, "*  ~~~ Can not get video device! ~~~\n");
+        return(1);
+    }
+    
+    fprintf(stderr, "* v4l2 stream format is set\n");
+    fprintf(stderr, "*  v4l2 stream data format - Width: %d \n",sdf.fmt.pix.width);
     fprintf(stderr, "*  v4l2 stream data format - Height: %d \n",sdf.fmt.pix.height);
     fprintf(stderr, "*  v4l2 stream data format - Pixel format: %d \n",sdf.fmt.pix.pixelformat);
     
@@ -255,7 +259,7 @@ void getData_M026(struct libusb_transfer *trf){
                     break;
                 } 
                 
-                size_t written_bytes ;	
+                size_t written_bytes ;    
                 written_bytes = write(dev_fd,video_buffer, video_buffer_size);
                 line=0;
                 line_offset=0;
@@ -307,29 +311,29 @@ int main (int argc, char **argv) {
     printf("* <----------------\n* Streamer started!\n");
     int opt;
     while((opt = getopt(argc, argv, ":id:w:h:v")) != -1)
-	{
-		switch(opt)
-		{
+    {
+        switch(opt)
+        {
             case 'd' :
                 sprintf(v4l2_device,"%s",optarg);
                 fprintf(stderr, "*  - v4l2 loopback device: %s\n", optarg);
                 break;
-			case 'w' :
+            case 'w' :
                 width = atoi(optarg);
                 fprintf(stderr, "*  - Width: %d\n", width);
-				break;
- 			case 'h' :
+                break;
+            case 'h' :
                 height = atoi(optarg);;
                 fprintf(stderr, "*  - Height: %d\n", height);
-				break; 
+                break; 
             case 'v' :
                 verbose = true;
                 break;
-			case '?' :
-				fprintf(stderr, "*  - Unknown option: %c\n", optopt);
-				break;
-		}
-	}
+            case '?' :
+                fprintf(stderr, "*  - Unknown option: %c\n", optopt);
+            break;
+        }
+    }
     
     // Handle signals
     signal(SIGINT, signalHandler);
@@ -407,81 +411,81 @@ int main (int argc, char **argv) {
     
     getCaptureStart();
     getCaptureEnd();
-	width=(endX-startX)/2;
-	height=(endY-startY)*2;
+    width=(endX-startX)/2;
+    height=(endY-startY)*2;
         
     line_size=width*2;
     line_buffer = calloc(line_size, sizeof(uint8_t));
     
-	video_buffer_size=line_size*height;
-	video_buffer = calloc(video_buffer_size, sizeof(uint8_t));
+    video_buffer_size=line_size*height;
+    video_buffer = calloc(video_buffer_size, sizeof(uint8_t));
     
     fprintf(stderr,"* m026: Capture start: (%d,%d)\n",startX,startY);
     fprintf(stderr,"* m026: Capture end: (%d,%d)\n",endX,endY);
     fprintf(stderr,"* m026: Width: %d\n* m026: Height: %d\n",width,height);
     
 // --------------------------------------------------------------------------
-	
+    
     dev_fd = open(v4l2_device, O_RDWR);
-	if (dev_fd < 0) {
-		perror(v4l2_device);
-		return errno;
-	}
-	
-	r=setV4L2format();
+    if (dev_fd < 0) {
+        perror(v4l2_device);
+        return errno;
+    }
 
-	size_t written_bytes ;	
-	written_bytes = write(dev_fd,video_buffer, video_buffer_size);
+    r=setV4L2format();
+
+    size_t written_bytes ;    
+    written_bytes = write(dev_fd,video_buffer, video_buffer_size);
 
 // --------------------------------------------------------------------------
  
-	struct libusb_transfer *trf0;
-	trf0 = libusb_alloc_transfer( 64 );
-	assert( trf0 != NULL ); 
-	libusb_fill_iso_transfer(trf0, devh, 0x82, isobuf0, 64*3072, 64 , getData_M026, NULL, 2000 );
-	libusb_set_iso_packet_lengths(trf0, 3072 );
+    struct libusb_transfer *trf0;
+    trf0 = libusb_alloc_transfer( 64 );
+    assert( trf0 != NULL ); 
+    libusb_fill_iso_transfer(trf0, devh, 0x82, isobuf0, 64*3072, 64 , getData_M026, NULL, 2000 );
+    libusb_set_iso_packet_lengths(trf0, 3072 );
   
-	struct libusb_transfer *trf1;
-	trf1 = libusb_alloc_transfer( 64 );
-	assert( trf1 != NULL ); 
-	libusb_fill_iso_transfer(trf1, devh, 0x82, isobuf1, 64*3072, 64 , getData_M026, NULL, 2000 );
-	libusb_set_iso_packet_lengths(trf1, 3072 );
-	
-	struct libusb_transfer *trf2;
-	trf2 = libusb_alloc_transfer( 64 );
-	assert( trf2 != NULL ); 
-	libusb_fill_iso_transfer(trf2, devh, 0x82, isobuf2, 64*3072, 64 , getData_M026, NULL, 2000 );
-	libusb_set_iso_packet_lengths(trf2, 3072 );
-	
-	struct libusb_transfer *trf3;
-	trf3 = libusb_alloc_transfer( 64 );
-	assert( trf3 != NULL ); 
-	libusb_fill_iso_transfer(trf3, devh, 0x82, isobuf3, 64*3072, 64 , getData_M026, NULL, 2000 );
-	libusb_set_iso_packet_lengths(trf3, 3072 );
-	
+    struct libusb_transfer *trf1;
+    trf1 = libusb_alloc_transfer( 64 );
+    assert( trf1 != NULL ); 
+    libusb_fill_iso_transfer(trf1, devh, 0x82, isobuf1, 64*3072, 64 , getData_M026, NULL, 2000 );
+    libusb_set_iso_packet_lengths(trf1, 3072 );
+    
+    struct libusb_transfer *trf2;
+    trf2 = libusb_alloc_transfer( 64 );
+    assert( trf2 != NULL ); 
+    libusb_fill_iso_transfer(trf2, devh, 0x82, isobuf2, 64*3072, 64 , getData_M026, NULL, 2000 );
+    libusb_set_iso_packet_lengths(trf2, 3072 );
+    
+    struct libusb_transfer *trf3;
+    trf3 = libusb_alloc_transfer( 64 );
+    assert( trf3 != NULL ); 
+    libusb_fill_iso_transfer(trf3, devh, 0x82, isobuf3, 64*3072, 64 , getData_M026, NULL, 2000 );
+    libusb_set_iso_packet_lengths(trf3, 3072 );
+    
 
-	r = libusb_submit_transfer(trf0);
-	if (r != 0) {
-		fprintf( stderr, "* libusb_submit_transfer failed with error %d\n", r);
-		exit(1);
+    r = libusb_submit_transfer(trf0);
+    if (r != 0) {
+        fprintf( stderr, "* libusb_submit_transfer failed with error %d\n", r);
+        exit(1);
     }
 
-	r = libusb_submit_transfer(trf1);
-	if (r != 0) {
-		fprintf( stderr, "* libusb_submit_transfer failed with error %d\n", r);
-		exit(1);
+    r = libusb_submit_transfer(trf1);
+    if (r != 0) {
+        fprintf( stderr, "* libusb_submit_transfer failed with error %d\n", r);
+        exit(1);
     }
 
-	r = libusb_submit_transfer( trf2 );
-	if (r != 0) {
-		fprintf( stderr, "* libusb_submit_transfer failed with error %d\n", r);
-		exit(1);
+    r = libusb_submit_transfer( trf2 );
+    if (r != 0) {
+        fprintf( stderr, "* libusb_submit_transfer failed with error %d\n", r);
+        exit(1);
     }
  
-	r = libusb_submit_transfer( trf3 );
-	if (r != 0) {
-		fprintf( stderr, "* libusb_submit_transfer failed with error %d\n", r);
-		exit(1);
+    r = libusb_submit_transfer( trf3 );
+    if (r != 0) {
+        fprintf( stderr, "* libusb_submit_transfer failed with error %d\n", r);
+        exit(1);
     }
 
   
@@ -491,26 +495,26 @@ int main (int argc, char **argv) {
     // Run until termination
     while (running == true){
         if (update_capture == true) {
-                getCaptureStart();
-                getCaptureEnd();
-                width=(endX-startX)/2;
-                height=(endY-startY)*2;
+            getCaptureStart();
+            getCaptureEnd();
+            width=(endX-startX)/2;
+            height=(endY-startY)*2;
                 
-                line_size=width*2;
-                line_buffer = realloc(line_buffer, line_size*sizeof(uint8_t));
+            line_size=width*2;
+            line_buffer = realloc(line_buffer, line_size*sizeof(uint8_t));
                 
-                video_buffer_size=line_size*height;
-                video_buffer = realloc(video_buffer,video_buffer_size*sizeof(uint8_t));
+            video_buffer_size=line_size*height;
+            video_buffer = realloc(video_buffer,video_buffer_size*sizeof(uint8_t));
                 
-                r=setV4L2format();
-                if(r>0)
-                    fprintf(stderr,"* ~~~ Setting v4l2 stream data format failed! ~~~\n");
-                else {    
-                    fprintf(stderr,"* m026: Capture start: (%d,%d)\n",startX,startY);
-                    fprintf(stderr,"* m026: Capture end: (%d,%d)\n",endX,endY);
-                    fprintf(stderr,"* m026: Width: %d\n* m026: Height: %d\n",width,height);
-                }
-                update_capture = false;
+            r=setV4L2format();
+            if(r>0)
+                fprintf(stderr,"* ~~~ Setting v4l2 stream data format failed! ~~~\n");
+            else {    
+                fprintf(stderr,"* m026: Capture start: (%d,%d)\n",startX,startY);
+                fprintf(stderr,"* m026: Capture end: (%d,%d)\n",endX,endY);
+                fprintf(stderr,"* m026: Width: %d\n* m026: Height: %d\n",width,height);
+            }
+            update_capture = false;
         }
         if (interrupted != true)
             libusb_handle_events(NULL);
