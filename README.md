@@ -2,7 +2,7 @@
 **A TV app for the AVerMedia AVerTV USB2.0**
 
 ---
-![ScreenShot](http://burabizim.org.tr/tvM026/Screenshot-tvM026.png)
+![](Screenshot-tvM026.png)
 
 tvM026 is a Linux app for the AVerMedia AVerTV USB2.0 (USB Id: 07ca:0026). The main controller of the device - Crescentec/Syntek CT-DC1100 video controller - is an ancestor of Syntek STK11xx series video imaging controllers and has similar registers with this series of controllers. 
 The Python class `M026Device` provides a set of functions to control the hardware.
